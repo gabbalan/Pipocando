@@ -1,5 +1,18 @@
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+package com.example.pipocando_oficial.ui.screens
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -9,13 +22,33 @@ fun HomeScreen(onGoSearch: () -> Unit, onGoProfile: () -> Unit) {
     Scaffold(
         bottomBar = {
             NavigationBar {
-                NavigationBarItem(selected = true, onClick = { }, icon = { Icon(Icons.Default.Home, null) }, label = { Text("Home") })
-                NavigationBarItem(selected = false, onClick = onGoSearch, icon = { Icon(Icons.Default.Search, null) }, label = { Text("Buscar") })
-                NavigationBarItem(selected = false, onClick = onGoProfile, icon = { Icon(Icons.Default.Person, null) }, label = { Text("Perfil") })
+                NavigationBarItem(
+                    selected = true,
+                    onClick = { },
+                    icon = { Icon(Icons.Filled.Home, contentDescription = null) },
+                    label = { Text("Home") }
+                )
+                NavigationBarItem(
+                    selected = false,
+                    onClick = onGoSearch,
+                    icon = { Icon(Icons.Filled.Search, contentDescription = null) },
+                    label = { Text("Buscar") }
+                )
+                NavigationBarItem(
+                    selected = false,
+                    onClick = onGoProfile,
+                    icon = { Icon(Icons.Filled.Person, contentDescription = null) },
+                    label = { Text("Perfil") }
+                )
             }
         }
     ) { padding ->
-        Column(Modifier.fillMaxSize().padding(padding).padding(16.  dp)) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(16.dp)
+        ) {
             Text("Feed de Amigos (mock)", style = MaterialTheme.typography.titleLarge)
             Text("• Lucas avaliou 'Inception' com 5⭐")
             Text("• Ana marcou 'Oppenheimer' como Quero ver")
@@ -23,9 +56,3 @@ fun HomeScreen(onGoSearch: () -> Unit, onGoProfile: () -> Unit) {
         }
     }
 }
-
-// imports de ícones (deixe no final do arquivo)
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
