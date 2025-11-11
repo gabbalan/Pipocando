@@ -20,7 +20,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // Substitua pela sua chave real (pegue em http://www.omdbapi.com/apikey.aspx)
-        buildConfigField("String", "OMDB_API_KEY", "\"SUA_OMDB_KEY_AQUI\"")
+        buildConfigField("String", "OMDB_API_KEY", "\"a723bf26\"")
     }
 
     buildTypes {

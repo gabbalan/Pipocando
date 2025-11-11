@@ -1,77 +1,102 @@
-package com.example.pipocando_oficial.viewmodel
+package com.example.pipocando_oficial.ui.screens
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.pipocando_oficial.BuildConfig
-import com.example.pipocando_oficial.data.network.OmdbDetail
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.example.pipocando_oficial.data.network.OmdbShort
-import com.example.pipocando_oficial.data.repository.MovieRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
+import com.example.pipocando_oficial.viewmodel.SearchViewModel
 
-class SearchViewModel(app: Application) : AndroidViewModel(app) {
-    private val repo = MovieRepository(app)
+@Composable
+fun SearchScreen(onOpenDetail: (String) -> Unit) {
+    val vm: SearchViewModel = viewModel()
 
-    private val _results = MutableStateFlow<List<OmdbShort>>(emptyList())
-    val results: StateFlow<List<OmdbShort>> = _results
+    // ✅ Tipos explícitos
+    val results: List<OmdbShort> by vm.results.collectAsState(initial = emptyList())
+    val isLoading: Boolean by vm.isLoading.collectAsState(initial = false)
+    val errorMessage: String? by vm.errorMessage.collectAsState(initial = null)
 
-    private val _loading = MutableStateFlow(false)
-    val loading: StateFlow<Boolean> = _loading
+    var query by remember { mutableStateOf(TextFieldValue("")) }
 
-    private val _error = MutableStateFlow<String?>(null)
-    val error: StateFlow<String?> = _error
-
-    private val apiKey = BuildConfig.OMDB_API_KEY
-
-    init {
-        // dispara uma busca inicial para já mostrar algo na tela
-        search("batman")
-    }
-
-    fun search(query: String) {
-        _error.value = null
-        if (apiKey.isBlank() || apiKey == "SUA_OMDB_KEY_AQUI") {
-            _results.value = emptyList()
-            _error.value = "Configure sua OMDb API key no build.gradle.kts (BuildConfig.OMDB_API_KEY)."
-            return
-        }
-        if (query.isBlank()) {
-            _results.value = emptyList()
-            _error.value = "Digite um termo de busca."
-            return
-        }
-
-        viewModelScope.launch {
-            _loading.value = true
-            try {
-                val r = repo.api.search(apiKey, query.trim())
-                val ok = (r.response?.equals("True", ignoreCase = true) == true)
-                if (ok && !r.items.isNullOrEmpty()) {
-                    _results.value = r.items!!
-                    _error.value = null
-                } else {
-                    _results.value = emptyList()
-                    _error.value = r.error ?: "Sem resultados para \"$query\"."
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        // Campo de busca
+        OutlinedTextField(
+            value = query,
+            onValueChange = {
+                query = it
+                if (it.text.length > 2) {
+                    vm.search(it.text)
                 }
-            } catch (e: Exception) {
-                _results.value = emptyList()
-                _error.value = "Falha ao buscar (verifique a Internet e a API key)."
-            } finally {
-                _loading.value = false
+            },
+            label = { Text("Buscar filme...") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        when {
+            isLoading -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            }
+
+            !errorMessage.isNullOrEmpty() -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(text = errorMessage ?: "", color = MaterialTheme.colorScheme.error)
+                }
+            }
+
+            else -> {
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    items(results) { movie ->
+                        MovieListItem(
+                            title = movie.title,
+                            year = movie.year,
+                            poster = movie.poster,
+                            onClick = { onOpenDetail(movie.imdbID) }
+                        )
+                    }
+                }
             }
         }
     }
+}
 
-    suspend fun detail(id: String): OmdbDetail? = try {
-        repo.api.detail(apiKey, id)
-    } catch (_: Exception) { null }
-
-    suspend fun save(
-        id: String, title: String, year: String?, poster: String?,
-        status: String, rating: Float?, review: String?
+@Composable
+private fun MovieListItem(title: String, year: String?, poster: String?, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp)
+            .clickable(onClick = onClick),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        repo.saveMovie(id, title, year, poster, status, rating, review)
+        Row(modifier = Modifier.padding(8.dp)) {
+            AsyncImage(
+                model = poster,
+                contentDescription = title,
+                modifier = Modifier
+                    .size(80.dp)
+                    .padding(end = 12.dp)
+            )
+            Column(modifier = Modifier.align(Alignment.CenterVertically)) {
+                Text(title, style = MaterialTheme.typography.titleMedium)
+                Text(year ?: "-", style = MaterialTheme.typography.bodySmall)
+            }
+        }
     }
 }
