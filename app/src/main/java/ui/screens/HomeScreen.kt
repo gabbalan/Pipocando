@@ -49,10 +49,13 @@ fun HomeScreen(onGoSearch: () -> Unit, onGoProfile: () -> Unit) {
                 .padding(padding)
                 .padding(16.dp)
         ) {
-            Text("Feed de Amigos (mock)", style = MaterialTheme.typography.titleLarge)
+            Text("Feed de Amigos. ", style = MaterialTheme.typography.titleLarge)
             Text("• Lucas avaliou 'Inception' com 5⭐")
-            Text("• Ana marcou 'Oppenheimer' como Quero ver")
+            Text("• Vini marcou 'Oppenheimer' como Quero ver")
             Text("• João avaliou 'Matrix' com 4⭐")
+            Text("• Eduardo avaliou 'Fast and Furious' com 5⭐")
+            Text("• Luiz avaliou 'Maze Runner' com 4⭐")
+            Text("• Gabriel avaliou 'Harry Potter' com 5⭐")
         }
     }
 }

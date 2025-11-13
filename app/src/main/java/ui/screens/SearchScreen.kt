@@ -19,7 +19,6 @@ import com.example.pipocando_oficial.viewmodel.SearchViewModel
 fun SearchScreen(onOpenDetail: (String) -> Unit) {
     val vm: SearchViewModel = viewModel()
 
-    // ✅ Tipos explícitos
     val results: List<OmdbShort> by vm.results.collectAsState(initial = emptyList())
     val isLoading: Boolean by vm.isLoading.collectAsState(initial = false)
     val errorMessage: String? by vm.errorMessage.collectAsState(initial = null)
@@ -31,7 +30,6 @@ fun SearchScreen(onOpenDetail: (String) -> Unit) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Campo de busca
         OutlinedTextField(
             value = query,
             onValueChange = {

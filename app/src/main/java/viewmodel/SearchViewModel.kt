@@ -17,7 +17,6 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private val _results = MutableStateFlow<List<OmdbShort>>(emptyList())
     val results: StateFlow<List<OmdbShort>> = _results
 
-    // 🔁 renomeado para evitar qualquer conflito
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 

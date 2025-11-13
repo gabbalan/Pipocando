@@ -15,7 +15,6 @@ fun LoginScreen(onLogged: () -> Unit) {
     val loading by vm.loading.collectAsState()
     val error by vm.error.collectAsState()
 
-    // se já tem sessão, pula
     LaunchedEffect(Unit) {
         if (vm.isLogged()) onLogged()
     }
@@ -101,8 +100,6 @@ fun LoginScreen(onLogged: () -> Unit) {
             Button(
                 onClick = {
                     if (password != confirm) {
-                        // feedback local simples
-                        // (para algo mais caprichado, use SnackbarHostState)
                     } else {
                         vm.register(name, email, password) { onLogged() }
                     }

@@ -19,7 +19,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // Substitua pela sua chave real (pegue em http://www.omdbapi.com/apikey.aspx)
         buildConfigField("String", "OMDB_API_KEY", "\"a723bf26\"")
     }
 
@@ -32,7 +31,6 @@ android {
             )
         }
         debug {
-            // nada especial por enquanto
         }
     }
 
@@ -51,7 +49,6 @@ android {
 }
 
 dependencies {
-    // --- Base Compose/AndroidX ---
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -64,37 +61,28 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
 
-    // --- Navegação Compose ---
     implementation(libs.androidx.navigation.compose)
 
-    // --- Coroutines ---
     implementation(libs.kotlinx.coroutines.android)
 
-    // --- Room ---
     implementation(libs.room.ktx)
     kapt(libs.room.compiler)
 
-    // --- Retrofit + Gson ---
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
 
-    // --- Coil (imagens) ---
     implementation(libs.coil.compose)
 
-    // --- Ícones Material (Icons.Default.*) ---
     implementation(libs.androidx.material.icons.extended)
 
-    // --- (Opcional) helpers lifecycle para Compose (LaunchedEffect + lifecycleOwner, etc.) ---
     implementation(libs.androidx.lifecycle.runtime.compose)
 
-    // --- Testes ---
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
 
-    // --- Debug ---
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
